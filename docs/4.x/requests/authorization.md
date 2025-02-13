@@ -72,6 +72,50 @@ will not be allowed to perform that action. So, if you have defined a policy,
 don't forget to define all of its relevant authorization methods.
 :::
 
+### Custom error messages
+
+If you want to return a custom error message when a user is not authorized
+or based on the result of the authorization, you can use the 
+`Illuminate\Auth\Access\Response` class. This class allows you to return a
+custom response when the user is not authorized or when the authorization
+fails.
+
+For example, if you want to return a custom error message when a user is not
+authorized to update a post, you can use the `deny` method:
+
+```php
+namespace App\Policies;
+
+use App\Models\Post;
+use App\Models\User;
+use Illuminate\Auth\Access\Response;
+
+class PostPolicy
+{
+
+    /**
+     * Authorize a user to update a post.
+     *
+     * @param User $user
+     * @param Post $post
+     * @return Response
+     */
+    public function update(User $user, Post $post): Response
+    {
+        if ($user->is($post->author)) {
+            return Response::allow();
+        }
+
+        return Response::deny(
+            'You are not the author of this post. You cannot update it.'
+        );
+    }
+}
+```
+
+This will return a `403 Forbidden` response with the custom error message
+when the user is not authorized to update the post. 
+
 ### Relationship Authorization
 
 Laravel JSON:API also expects policy methods to be defined for each relationship
