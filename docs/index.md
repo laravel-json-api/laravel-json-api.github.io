@@ -9,7 +9,7 @@ hero:
   actions:
     - theme: brand
       text: Read the Docs
-      link: /4.x/
+      link: /5.x/
     - theme: alt
       text: View on Github
       link: https://github.com/laravel-json-api/laravel
