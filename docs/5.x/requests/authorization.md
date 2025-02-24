@@ -30,13 +30,13 @@ request classes.
 The following table shows the policy authorization method for each resource
 request defined by the JSON:API specification:
 
-| Verb | URI | Authorization Method |
-| --- | --- | --- |
-| GET | `/posts` |  viewAny |
-| POST | `/posts` | create |
-| GET | `/posts/{post}` | view |
-| PATCH | `/posts/{post}` | update |
-| DELETE | `/posts/{post}` | delete |
+| Verb   | URI             | Authorization Method |
+|--------|-----------------|----------------------|
+| GET    | `/posts`        | viewAny              |
+| POST   | `/posts`        | create               |
+| GET    | `/posts/{post}` | view                 |
+| PATCH  | `/posts/{post}` | update               |
+| DELETE | `/posts/{post}` | delete               |
 
 The `viewAny` and `create` policy methods
 [will not receive a model](https://laravel.com/docs/authorization#methods-without-models).
@@ -71,6 +71,55 @@ If a policy exists but is missing a method for a particular action, the user
 will not be allowed to perform that action. So, if you have defined a policy,
 don't forget to define all of its relevant authorization methods.
 :::
+
+### Gate Responses
+
+If you want to return a custom error message when a user is not authorized
+or based on the result of the authorization, you can use the
+`Illuminate\Auth\Access\Response` class. This class allows you to return a
+custom response when the user is not authorized or when the authorization
+fails.
+
+:::tip
+See the [Laravel documentation on Gate Responses](https://laravel.com/docs/authorization#gate-responses)
+for more details.
+:::
+
+For example, if you want to return a custom error message when a user is not
+authorized to update a post, you can use the `deny` method:
+
+```php
+namespace App\Policies;
+
+use App\Models\Post;
+use App\Models\User;
+use Illuminate\Auth\Access\Response;
+
+class PostPolicy
+{
+
+    /**
+     * Authorize a user to update a post.
+     *
+     * @param User $user
+     * @param Post $post
+     * @return Response
+     */
+    public function update(User $user, Post $post): Response
+    {
+        if ($user->is($post->author)) {
+            return Response::allow();
+        }
+
+        return Response::deny(
+            'You are not the author of this post. You cannot update it.'
+        );
+    }
+}
+```
+
+This will return a `403 Forbidden` response with the custom error message
+when the user is not authorized to update the post.
 
 ### Relationship Authorization
 
@@ -130,11 +179,11 @@ specification.
 In this example, we have an `author` relationship on a `posts` resource.
 The authorization method is invoked on the `PostPolicy`:
 
-| Verb | URI | Authorization Method |
-| --- | --- | --- |
-| GET | `/posts/{post}/author` | viewAuthor |
-| GET | `/posts/{post}/relationships/author` | viewAuthor |
-| PATCH | `/posts/{post}/relationships/author` | updateAuthor |
+| Verb  | URI                                  | Authorization Method |
+|-------|--------------------------------------|----------------------|
+| GET   | `/posts/{post}/author`               | viewAuthor           |
+| GET   | `/posts/{post}/relationships/author` | viewAuthor           |
+| PATCH | `/posts/{post}/relationships/author` | updateAuthor         |
 
 The `viewAuthor` authorization method receives the `Post` model that is
 subject of the request. For example:
@@ -217,13 +266,13 @@ specification.
 In this example, we have a `tags` relationship on a `posts` resource.
 The authorization method is invoked on the `PostPolicy`:
 
-| Verb | URI | Authorization Method |
-| --- | --- | --- |
-| GET | `/posts/{post}/tags` | viewTags |
-| GET | `/posts/{post}/relationships/tags` | viewTags |
-| PATCH | `/posts/{post}/relationships/tags` | updateTags |
-| POST | `/posts/{post}/relationships/tags` | attachTags |
-| DELETE | `/posts/{post}/relationships/tags` | detachTags |
+| Verb   | URI                                | Authorization Method |
+|--------|------------------------------------|----------------------|
+| GET    | `/posts/{post}/tags`               | viewTags             |
+| GET    | `/posts/{post}/relationships/tags` | viewTags             |
+| PATCH  | `/posts/{post}/relationships/tags` | updateTags           |
+| POST   | `/posts/{post}/relationships/tags` | attachTags           |
+| DELETE | `/posts/{post}/relationships/tags` | detachTags           |
 
 The `viewTags` authorization method receives the `Post` model that is
 subject of the request. For example:
