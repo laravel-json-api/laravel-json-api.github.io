@@ -5,7 +5,7 @@
 Version 5 introduced a breaking change for authorization, which will not affect the majority of applications.
 See the details below.
 
-This new major release also supports both Laravel 11 and 12.
+This new major release also supports Laravel 11, 12 and 13.
 
 ### Upgrading
 
