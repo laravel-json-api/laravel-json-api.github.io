@@ -49,6 +49,41 @@ export default defineConfig({
         },
 
         outline: 'deep',
+
+        search: {
+            provider: 'local',
+            options: {
+                miniSearch: {
+                    searchOptions: {
+                        boostDocument(documentId, term) {
+                            documentId = documentId.toLowerCase();
+                            term = term.toLowerCase();
+
+                            // Exact page match
+                            if (documentId.endsWith(`/${term}.html#${term}`)) {
+                                return 100;
+                            }
+
+                            return 1;
+                        },
+                        boost: {
+                            title: 10,
+                            headers: 3,
+                            content: 1,
+                        },
+                    },
+                },
+                detailedView: false,
+                _render(src, env, md) {
+                    const path = env.relativePath || '';
+                    if (!path.startsWith('5.x/')) {
+                        return '';
+                    }
+
+                    return md.render(src, env);
+                },
+            },
+        },
     },
 
 })
