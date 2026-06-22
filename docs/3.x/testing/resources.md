@@ -228,7 +228,7 @@ public function test(): void
         ->withData($data)
         ->patch('/api/v1/posts/' . $post->getRouteKey());
 
-    $response->assertFetchedOne($expected);
+    $response->assertFetchedOne($data);
 
     $this->assertDatabaseHas('posts', [
         'id' => $post->getKey(),
