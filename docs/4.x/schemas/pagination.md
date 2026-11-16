@@ -25,10 +25,10 @@ paging implementation.
 
 Our implementation uses the `number` and `size` page parameters:
 
-| Parameter | Description |
-| :--- | :--- |
-| `number` | The page number that the client is requesting. |
-| `size` | The number of resources to return per-page. |
+| Parameter | Description                                    |
+|:----------|:-----------------------------------------------|
+| `number`  | The page number that the client is requesting. |
+| `size`    | The number of resources to return per-page.    |
 
 To use page-based pagination, return our `PagePagination` class from your
 schema's `pagination` method. For example:
@@ -140,7 +140,9 @@ details of the last page and total resources available.
 The Cursor-based pagination provided by this package uses Laravel's `cursorPaginate()` implementation.
 
 :::warning
-If you are currently using the `laravel-json-api/pagination` package please see the [upgrade guide](https://github.com/laravel-json-api/cursor-pagination/blob/develop/UPGRADE.md) for information on migrating to the new cursor pagination implementation.
+If you are currently using the `laravel-json-api/pagination` package please see
+the [upgrade guide](https://github.com/laravel-json-api/cursor-pagination/blob/develop/UPGRADE.md) for information on
+migrating to the new cursor pagination implementation.
 
 Cursor-based pagination is based on the paginator being given a context as to
 what results to return next. So rather than an API client saying it wants
@@ -164,13 +166,14 @@ You can think of a cursor as a bookmark that tells the server where to start and
 A `"before"` cursor returns resources listed before the
 results of the previous request. An `"after"` cursor returns resources listed after the results
 of the previous request. If both parameters are provided, only `"before"`is used.
-If neither parameter is provided, the first page of results will be returned along with an `after` cursor for you to retrieve the next page.
+If neither parameter is provided, the first page of results will be returned along with an `after` cursor for you to
+retrieve the next page.
 
-| Parameter | Description                                                                                                                                                                                                                                                                                                                                      |
-|:----------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `after`   | A cursor for use in pagination. `after` is an opaque cursor from a previous request                                                                                                                                                                                                                                                              |
-| `before`  | A cursor for use in pagination. `before` is an opaque cursor from a previous request                                                                                                                                                                                                                                                             |
-| `limit`   | A limit on the number of resources to be returned, i.e. the per-page amount.                                                                                                                                                                                                                                                                     |
+| Parameter | Description                                                                          |
+|:----------|:-------------------------------------------------------------------------------------|
+| `after`   | A cursor for use in pagination. `after` is an opaque cursor from a previous request  |
+| `before`  | A cursor for use in pagination. `before` is an opaque cursor from a previous request |
+| `limit`   | A limit on the number of resources to be returned, i.e. the per-page amount.         |
 
 To use cursor-based pagination, return our `CursorPagination` class from your
 schema's `pagination` method. For example:
@@ -278,8 +281,10 @@ To modify this default sort you can specify a default sort on your Schema. [See 
 protected $defaultSort = '-createdAt';
 ````
 
-When cursor paginating a model key sort will be added to your sort order to ensure a consistent order. If your sort order already includes the model key, it will not be added again.
-If your sort order is already deterministic you can disable teh additional key sort with the `withoutKeySort` method. For example:
+When cursor paginating a model key sort will be added to your sort order to ensure a consistent order. If your sort
+order already includes the model key, it will not be added again.
+If your sort order is already deterministic you can disable teh additional key sort with the `withoutKeySort` method.
+For example:
 
 ```php
 protected $defaultSort = ['-createdAt', 'uuid'];
@@ -346,6 +351,7 @@ public function pagination(): CursorPagination
         ->withTotal();
 }
 ```
+
 This will return a `total` in the page meta as follows:
 
 ```http
@@ -370,7 +376,8 @@ Content-Type: application/vnd.api+json
 This option results in an additional query to count the results on every page request.
 This is not recommended since the count could change between successive requests when paginating.
 
-Instead you can opt to calculate this only on a paginated request without a cursor, i.e. the first page, by using the `withTotalOnFirstPage` method:
+Instead you can opt to calculate this only on a paginated request without a cursor, i.e. the first page, by using the
+`withTotalOnFirstPage` method:
 
 ```php
 public function pagination(): CursorPagination
@@ -435,7 +442,6 @@ request. Use the `between` validation rule when validating the `page.size`
 or `page.limit` query parameters. For example, `between:1,100`.
 :::
 
-
 ## Page Meta
 
 Both the page-based and cursor-based pagination approaches add information
@@ -483,24 +489,26 @@ public function pagination(): PagePagination
 }
 ```
 
-This would result in the following meta in your HTTP response
-(using the page-based approach as an example):
+This would result in the following meta in your HTTP response (using the page-based approach as an example):
 
 ```json
 {
-    "meta": {
-        "paginator": {
-              "currentPage": 2,
-              "from": 16,
-              "lastPage": 4,
-              "perPage": 15,
-              "to": 30,
-              "total": 50
-        }
-    },
-    "data": [...]
+  "meta": {
+    "paginator": {
+      "currentPage": 2,
+      "from": 16,
+      "lastPage": 4,
+      "perPage": 15,
+      "to": 30,
+      "total": 50
+    }
+  },
+  "data": [
+    ...
+  ]
 }
 ```
+
 If you want to disable nesting of the page details in the top-level
 `meta`, you can use the `withoutNestedMeta` method:
 
@@ -515,15 +523,17 @@ This will result in the following:
 
 ```json
 {
-    "meta": {
-        "currentPage": 2,
-        "from": 16,
-        "lastPage": 4,
-        "perPage": 15,
-        "to": 30,
-        "total": 50
-    },
-    "data": [...]
+  "meta": {
+    "currentPage": 2,
+    "from": 16,
+    "lastPage": 4,
+    "perPage": 15,
+    "to": 30,
+    "total": 50
+  },
+  "data": [
+    ...
+  ]
 }
 ```
 
