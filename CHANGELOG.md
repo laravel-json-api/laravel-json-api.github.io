@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file. This projec
 
 ## Unreleased
 
+## [5.3.0] - 2026-11-16
+
+### Changed
+
+- [#42](https://github.com/laravel-json-api/laravel-json-api.github.io/pull/42) Update cursor pagination docs to reflect
+  native Eloquent implementation.
+
+### Fixed
+
+- [#44](https://github.com/laravel-json-api/laravel-json-api.github.io/pull/44) Fix some typos.
+
 ## [5.2.0] - 2026-05-13
 
 ### Added
