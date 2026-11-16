@@ -87,7 +87,7 @@ This works for attributes that relate to a database column that can be sorted.
 
 Our sort field classes can be used to describe additional sort fields that a
 client is allowed to send for a particular resource type. To add a sort field to
-a schema, we can simply add it to the shcema's `sortables()` method.
+a schema, we can simply add it to the schema's `sortables()` method.
 
 To create a sort field, we use the static `make` method. For example, if we
 wanted to add a sort field to our `posts` resource:
